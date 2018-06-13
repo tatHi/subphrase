@@ -3,7 +3,7 @@ bpe for words
   
 ## usage
 ```
-$ python bpe -i ../data/alice_formatted.txt -o ../data/result_alice.txt -l 25000
+$ python bpe.py -i ../data/alice_formatted.txt -o ../data/result_alice.txt -l 25000
 ```
   
 -i, --inPath: input data path  
