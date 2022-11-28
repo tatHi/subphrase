@@ -48,8 +48,9 @@ def merge(data, args):
         i += 1
 
         print('MERGE:', ''.join(word))
-        print('wordSize:', wordSize)
-        print('vocSize:', vocabSize)
+        print('mergeNumber:', i, '(GOAL: %s)'%(str(args.numMerge) if args.numMerge is not None else '-'))
+        print('wordSize:', wordSize, '(GOAL: %s)'%(str(args.wordLimit) if args.wordLimit is not None else '-'))
+        print('vocSize:', vocabSize, '(GOAL: %s)'%(str(args.vocabLimit) if args.vocabLimit is not None else '-'))
         if args.wordLimit is not None and wordSize <= args.wordLimit:
             break
         if args.vocabLimit is not None and vocabSize >= args.vocabLimit:
