@@ -1,14 +1,33 @@
 from collections import defaultdict
 
-def getFreqBigram(data):
+def getFreqBigram(data, maxRepetition, maxLength):
     countDict = defaultdict(lambda:0)
-
     for line in data:
         for i in range(len(line)-1):
             w = line[i] + ('_',) + line[i+1]
-            countDict[w] += 1
+            if countLength(w) <= maxLength and countRepetition(w) <= maxRepetition:
+                countDict[w] += 1
     word, freq = sorted(countDict.items(), key=lambda x:x[1])[-1]
     return word, freq
+
+def countLength(word):
+    size = len(word[0].split('_') + word[2].split('_'))
+    return size
+
+def countRepetition(word):
+    maxnum = 1
+    num = 1
+    line = word[0].split('_') + word[2].split('_')
+    for i in range(1, len(line)):
+        if line[i]==line[i-1]:
+            num += 1
+        else:
+            if maxnum < num:
+                maxnum = num
+            num = 1
+    if maxnum < num:
+        maxnum = num
+    return maxnum
 
 def updateData(data, x):
     neoData = []
@@ -39,12 +58,11 @@ def merge(data, args):
     mergeList = []
     i = 0
     while True:
-        word, freq = getFreqBigram(data)
+        word, freq = getFreqBigram(data, args.maxRepetition, args.maxLength)
         data = updateData(data, word)
         mergeList.append((''.join(word), str(freq)))
         wordSize = countWordSize(data)
         vocabSize = countVocabSize(data)
-        print(vocabSize, len(mergeList))
         i += 1
 
         print('MERGE:', ''.join(word))
@@ -117,6 +135,10 @@ if __name__ == '__main__':
                         help='merge until number of words in *vocab* reaches this limit')
     parser.add_argument('-nm', '--numMerge', default=None, type=int,
                         help='merge numMerge times')
+    parser.add_argument('-mr', '--maxRepetition', default=100, type=int,
+                        help='maximum number of repetition of the same tokens in merge (when 3, a_a_a_a with 4 repetition is ignored in merging operation)')
+    parser.add_argument('-ml', '--maxLength', default=10, type=int,
+                        help='maximum number of tokens in a single phrase (when 3, a_b_c_d with 4 tokens in single merge is ignored in meging operation)')
     args = parser.parse_args()
 
     main(args)
